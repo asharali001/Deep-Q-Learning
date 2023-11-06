@@ -6,7 +6,8 @@ class CartPole:
         self.env=gym.make('CartPole-v1', render_mode=render_mode)
         self.input_parameters = int(np.prod(self.env.observation_space.shape))
         self.no_of_actions = self.env.action_space.n
-        self.hidden_layers = [64]
+        self.hidden_layers = [128]
+        self.model_file_name = 'cartpole_model.pth'
         self.reset()
 
     def reset(self):

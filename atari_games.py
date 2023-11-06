@@ -6,10 +6,11 @@ import numpy as np
 # TODO(Ashar): this is messed, still working on it
 class AtariGames:
     def __init__(self, render_mode='None'):
-        self.env=gym.make('ALE/AirRaid-v5', render_mode=render_mode)        
-        self.input_parameters = int(np.prod(self.env.observation_space.shape))
+        self.env=gym.make('ALE/Pong-v5', render_mode=render_mode)        
+        self.input_parameters = 7056
         self.no_of_actions = self.env.action_space.n
         self.hidden_layers = [512, 256, 128]
+        self.model_file_name = 'atari_model.pth'
         self.reset()
 
     def reset(self):
@@ -22,7 +23,7 @@ class AtariGames:
         else:
             current_state = self.state
         current_state = cv2.cvtColor(current_state, cv2.COLOR_RGB2GRAY)
-        current_state = cv2.resize(current_state, (64, 64))
+        current_state = cv2.resize(current_state, (84, 84))
         return current_state.ravel()
 
     def play_step(self, action):

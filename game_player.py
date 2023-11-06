@@ -2,6 +2,7 @@ import os
 import torch
 
 from cartpole import CartPole
+from atari_games import AtariGames
 from q_net_model import QNetModel
 from progress_plotter import plot_progress
 
@@ -36,7 +37,7 @@ class GamePlayer:
 
     def load_model(self):
         model_folder = 'model'
-        model_name = 'q_net.pth'
+        model_name = self.game.model_file_name
         file_path = os.path.join(model_folder, model_name)
 
         if not os.path.exists(file_path):

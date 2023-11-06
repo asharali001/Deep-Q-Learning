@@ -18,9 +18,9 @@ class QNetModel(nn.Module):
             x = layer(x)
         return x
 
-    def save_model(self):
+    def save_model(self, filename):
         model_folder = 'model'
-        model_name = 'q_net.pth'
+        model_name = filename
         os.makedirs(model_folder, exist_ok=True)
         file_path = os.path.join(model_folder, model_name)
         torch.save(self.state_dict(), file_path)
