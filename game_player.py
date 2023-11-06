@@ -1,9 +1,5 @@
 import os
-import gym
 import torch
-import torch.nn as nn
-import numpy as np
-import random
 
 from cartpole import CartPole
 from q_net_model import QNetModel
