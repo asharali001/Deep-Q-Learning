@@ -3,6 +3,7 @@ import gym
 import torch
 import torch.nn as nn
 import numpy as np
+import random
 
 from cartpole import CartPole
 from q_net_model import QNetModel
@@ -17,14 +18,15 @@ class GamePlayer:
         no_games = 0
         plot_scores = []
         plot_mean_scores = []
-        final_move = [0 for _ in range(self.game.no_of_actions)]
         
         model = self.load_model()    
         while True:
+            final_move = [0 for _ in range(self.game.no_of_actions)]            
             state0 = torch.tensor(self.game.get_state(), dtype=torch.float)
             prediction = model(state0)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
+            
             _, done, score = self.game.play_step(final_move)
 
             if done:
