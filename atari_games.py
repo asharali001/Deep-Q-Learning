@@ -1,16 +1,34 @@
-import cv2
 import gym
-import ale_py
 import numpy as np
 
-# TODO(Ashar): this is messed, still working on it
+from atari_deep_net import AtariDeepNet
 class AtariGames:
-    def __init__(self, render_mode='None'):
-        self.env=gym.make('ALE/Pong-v5', render_mode=render_mode)        
-        self.input_parameters = 7056
+    def __init__(self, render_mode=None):
+        self.env_title = 'PongNoFrameskip-v4'
+        if render_mode is not None:
+            self.env=gym.make(self.env_title, render_mode=render_mode)
+        else:
+            self.env=gym.make(self.env_title)
+        self.env = gym.wrappers.AtariPreprocessing(
+            self.env, 
+            noop_max=30, 
+            frame_skip=4, 
+            screen_size=84, 
+            terminal_on_life_loss=False, 
+            grayscale_obs=True, 
+            grayscale_newaxis=False, 
+            scale_obs=False
+        )        
+        self.env = gym.wrappers.FrameStack(self.env, 4)
+
+        self.single_state_shape_len = 3
+        self.desired_mean_score = 50 #TODO(ASHAR): Fix desired_score for this
+        
+        
+        self.observation_space_shape = self.env.observation_space.shape
         self.no_of_actions = self.env.action_space.n
-        self.hidden_layers = [512, 256, 128]
-        self.model_file_name = 'atari_model.pth'
+        self.model = AtariDeepNet(self.env.observation_space, self.no_of_actions)
+        self.model_file_name = 'atari_model.pth'        
         self.reset()
 
     def reset(self):
@@ -21,10 +39,8 @@ class AtariGames:
         if len(self.state) == 2:
             current_state = self.state[0]
         else:
-            current_state = self.state
-        current_state = cv2.cvtColor(current_state, cv2.COLOR_RGB2GRAY)
-        current_state = cv2.resize(current_state, (84, 84))
-        return current_state.ravel()
+            current_state = self.state        
+        return current_state
 
     def play_step(self, action):
         move = action.index(1)
@@ -33,5 +49,5 @@ class AtariGames:
         done = truncated or terminated        
         self.state = state
         if not done:
-            self.score += 1        
+            self.score += reward        
         return reward, done, self.score

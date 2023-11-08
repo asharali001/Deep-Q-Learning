@@ -2,14 +2,14 @@ import os
 import torch
 import torch.nn as nn
 
-class QNetModel(nn.Module):
-    def __init__(self, input_size, hidden_sizes, output_size, activation_function=nn.ReLU()):  
+class CartpoleDeepNet(nn.Module):
+    def __init__(self, input_size, hidden_sizes, output_size):  
         super().__init__()              
         self.layers = nn.ModuleList()
         in_size = input_size
         for hidden_size in hidden_sizes:
             self.layers.append(nn.Linear(in_size, hidden_size))
-            self.layers.append(activation_function)
+            self.layers.append(nn.ReLU())
             in_size = hidden_size
         self.layers.append(nn.Linear(in_size, output_size))
 

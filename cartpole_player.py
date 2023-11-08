@@ -2,13 +2,11 @@ import os
 import torch
 
 from cartpole import CartPole
-from atari_games import AtariGames
-from q_net_model import QNetModel
 from progress_plotter import plot_progress
 
-class GamePlayer:
-    def __init__(self, game):
-       self.game = game
+class CartpolePlayer:
+    def __init__(self):
+       self.game = CartPole(render_mode='human')
 
     def play_game(self):
         total_score = 0
@@ -43,12 +41,11 @@ class GamePlayer:
         if not os.path.exists(file_path):
             raise FileNotFoundError("Model file not found. Make sure it exists in the 'model' folder.")
         
-        model = QNetModel(self.game.input_parameters, self.game.hidden_layers, self.game.no_of_actions)
+        model = self.game.model
         model.load_state_dict(torch.load(file_path))
         model.eval()
         return model
 
 if __name__ == '__main__':
-    cartpole = CartPole(render_mode='human')
-    game_player = GamePlayer(game=cartpole)
+    game_player = CartpolePlayer()
     game_player.play_game()
